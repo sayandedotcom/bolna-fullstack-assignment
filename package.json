@@ -6,7 +6,7 @@
     "build": "turbo build",
     "dev": "concurrently \"pnpm:dev:web\" \"pnpm:dev:api\"",
     "dev:web": "turbo dev --filter=web",
-    "dev:api": "cd apps/api && uvicorn main:app --reload --port 8000",
+    "dev:api": "cd apps/api && python -m uvicorn main:app --reload --port 8000",
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck"
