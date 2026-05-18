@@ -2,19 +2,12 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 
-from database import create_db_and_tables
-from routers.appointments import router as appointments_router
-from routers.webhooks import router as webhooks_router
-from routers.analytics import router as analytics_router
-
-load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./appointments.db")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()
     yield
 
 
@@ -34,6 +27,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def get_engine():
+    from sqlmodel import create_engine
+    return create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
+
+
+def get_session():
+    from sqlmodel import Session
+    from sqlmodel import SQLModel
+    engine = get_engine()
+    SQLModel.metadata.create_all(engine)
+    with Session(engine) as session:
+        yield session
+
+
+from routers.appointments import router as appointments_router
+from routers.webhooks import router as webhooks_router
+from routers.analytics import router as analytics_router
 
 app.include_router(appointments_router)
 app.include_router(webhooks_router)
