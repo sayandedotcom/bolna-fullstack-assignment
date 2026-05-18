@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "installCommand": "cd apps/api && pip install -r requirements.txt",
+  "buildCommand": "echo 'No build needed for Python API'",
   "builds": [
     {
       "src": "apps/api/main.py",
