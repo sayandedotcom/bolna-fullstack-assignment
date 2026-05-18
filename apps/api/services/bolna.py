@@ -3,6 +3,15 @@ import os
 from typing import Optional, Dict, Any
 
 
+def normalise_phone(phone: str) -> str:
+    digits = "".join(filter(str.isdigit, phone))
+    if len(digits) == 10:
+        return f"+91{digits}"
+    if len(digits) == 12 and digits.startswith("91"):
+        return f"+{digits}"
+    return f"+{digits}"
+
+
 class BolnaService:
     def __init__(self):
         self.api_key = os.getenv("BOLNA_API_KEY")
@@ -26,7 +35,7 @@ class BolnaService:
 
         payload = {
             "agent_id": self.agent_id,
-            "recipient_phone_number": phone,
+            "recipient_phone_number": normalise_phone(phone),
             "variables": {
                 "name": patient_name,
                 "specialty": specialty,
