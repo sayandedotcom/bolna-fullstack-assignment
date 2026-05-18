@@ -1,0 +1,166 @@
+
+<style>
+  * { box-sizing: border-box; }
+  .wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--color-text-secondary); text-transform: uppercase; margin: 0 0 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 1.5rem; }
+  .score-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .score-big { font-size: 48px; font-weight: 500; color: #0F6E56; line-height: 1; }
+  .score-sub { font-size: 13px; color: var(--color-text-secondary); margin: 4px 0 0; }
+  .score-pills { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .pill { font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+  .pill.green { background: #EAF3DE; color: #27500A; }
+  .pill.amber { background: #FAEEDA; color: #633806; }
+  .pill.red { background: #FCEBEB; color: #791F1F; }
+  .block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin: 0 0 10px; }
+  .review-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+  .review-item { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; display: flex; gap: 12px; }
+  .review-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .review-icon.green { color: #0F6E56; }
+  .review-icon.amber { color: #B87514; }
+  .review-icon.red { color: #C0392B; }
+  .review-body { flex: 1; }
+  .review-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 3px; }
+  .review-desc { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.6; }
+  .code-block { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); line-height: 1.7; margin-top: 8px; white-space: pre-wrap; }
+  .code-block .comment { color: var(--color-text-secondary); }
+  .code-block .key { color: #185FA5; }
+  .code-block .val { color: #0F6E56; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.25rem 0; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.25rem; }
+  .btn { font-size: 13px; padding: 7px 16px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: var(--color-background-secondary); }
+  .qa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .qa { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; }
+  .qa-q { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+  .qa-a { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5; }
+</style>
+
+<div class="wrap">
+  <p class="section-label">Architecture review</p>
+  <p class="section-title">Apollo HealthLine — Plan verification</p>
+
+  <div class="score-card">
+    <div>
+      <div class="score-big">8.5<span style="font-size:24px; color:var(--color-text-secondary)">/10</span></div>
+      <p class="score-sub">Strong plan. 3 gaps to fix before building.</p>
+    </div>
+    <div class="score-pills">
+      <span class="pill green">✓ Architecture sound</span>
+      <span class="pill green">✓ Stack is right</span>
+      <span class="pill green">✓ Proxy pattern correct</span>
+      <span class="pill green">✓ SQLModel good choice</span>
+      <span class="pill amber">⚠ Webhook not wired</span>
+      <span class="pill amber">⚠ Bolna call payload incomplete</span>
+      <span class="pill red">✗ No call_id tracking</span>
+    </div>
+  </div>
+
+  <p class="block-label">What's solid ✓</p>
+  <div class="review-grid">
+    <div class="review-item">
+      <i class="ti ti-circle-check review-icon green" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">Next.js proxy pattern is exactly right</p>
+        <p class="review-desc">Keeping the Bolna API key in Next.js API routes (not the browser) is the correct approach. Your BOLNA_API_KEY never leaks to the client. Good instinct.</p>
+      </div>
+    </div>
+    <div class="review-item">
+      <i class="ti ti-circle-check review-icon green" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">SQLModel + SQLite is perfect for this scope</p>
+        <p class="review-desc">Zero setup, type-safe, and sufficient for a demo. No need for Postgres here — SQLite is honest and fast. Good call.</p>
+      </div>
+    </div>
+    <div class="review-item">
+      <i class="ti ti-circle-check review-icon green" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">httpx async is the right HTTP client</p>
+        <p class="review-desc">Non-blocking Bolna API calls means your FastAPI won't freeze while waiting for Bolna to respond. Correct choice over requests.</p>
+      </div>
+    </div>
+    <div class="review-item">
+      <i class="ti ti-circle-check review-icon green" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">10s dashboard polling as webhook backup</p>
+        <p class="review-desc">Smart fallback. Webhooks can miss in dev. Polling ensures the dashboard always reflects current state even if a webhook fires late or fails.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="block-label">Gaps to fix before building ⚠</p>
+  <div class="review-grid">
+    <div class="review-item">
+      <i class="ti ti-alert-triangle review-icon red" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">You're not storing the Bolna call_id — this breaks everything downstream</p>
+        <p class="review-desc">When Bolna triggers a call, it returns a call_id. You MUST save this to your Appointment row. Without it, you can't match incoming webhooks to appointments, can't fetch transcripts, and your dashboard will have orphaned records.</p>
+        <div class="code-block"><span class="comment"># In your Appointment model, add:</span>
+call_id: <span class="key">Optional</span>[<span class="val">str</span>] = None
+call_status: <span class="key">str</span> = <span class="val">"pending"</span>  <span class="comment"># pending|in_progress|completed|failed</span>
+transcript: <span class="key">Optional</span>[<span class="val">str</span>] = None
+
+<span class="comment"># In routers/appointments.py, after Bolna API call:</span>
+response = await bolna.trigger_call(appointment)
+appointment.call_id = response[<span class="val">"call_id"</span>]
+session.add(appointment)
+session.commit()</div>
+      </div>
+    </div>
+    <div class="review-item">
+      <i class="ti ti-alert-triangle review-icon amber" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">Bolna call payload needs recipient_phone_number in E.164 format</p>
+        <p class="review-desc">Bolna expects +91XXXXXXXXXX not 9876543210. Add a phone normaliser in your bolna.py service or the call will fail silently.</p>
+        <div class="code-block"><span class="comment"># services/bolna.py</span>
+<span class="key">def</span> normalise_phone(phone: <span class="val">str</span>) -> <span class="val">str</span>:
+    digits = <span class="val">"".join</span>(filter(<span class="val">str.isdigit</span>, phone))
+    <span class="key">if</span> len(digits) == <span class="val">10</span>:
+        <span class="key">return</span> <span class="val">f"+91{digits}"</span>
+    <span class="key">if</span> len(digits) == <span class="val">12</span> and digits.startswith(<span class="val">"91"</span>):
+        <span class="key">return</span> <span class="val">f"+{digits}"</span>
+    <span class="key">return</span> <span class="val">f"+{digits}"</span></div>
+      </div>
+    </div>
+    <div class="review-item">
+      <i class="ti ti-alert-triangle review-icon amber" aria-hidden="true"></i>
+      <div class="review-body">
+        <p class="review-title">Webhook endpoint needs signature verification + 200 response immediately</p>
+        <p class="review-desc">Bolna will retry the webhook if it doesn't get a 200 within ~3 seconds. Do your DB write async and return 200 immediately. Also validate the payload has a call_id before processing.</p>
+        <div class="code-block"><span class="comment"># routers/webhooks.py</span>
+<span class="key">@router</span>.post(<span class="val">"/webhook/bolna"</span>)
+<span class="key">async def</span> bolna_webhook(payload: dict, background: BackgroundTasks):
+    background.add_task(process_webhook, payload)
+    <span class="key">return</span> {<span class="val">"status"</span>: <span class="val">"ok"</span>}  <span class="comment"># Return 200 instantly</span>
+
+<span class="key">async def</span> process_webhook(payload: dict):
+    call_id = payload.get(<span class="val">"call_id"</span>)
+    <span class="key">if not</span> call_id: <span class="key">return</span>
+    <span class="comment"># update appointment by call_id...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="block-label">Your 3 pre-build questions — answered</p>
+  <div class="qa-grid">
+    <div class="qa">
+      <p class="qa-q">Bolna API key + Agent ID?</p>
+      <p class="qa-a">Get API key from platform.bolna.ai → Settings → API Keys. Agent ID is shown on your Apollo HealthLine agent card. Put both in .env as BOLNA_API_KEY and BOLNA_AGENT_ID.</p>
+    </div>
+    <div class="qa">
+      <p class="qa-q">ngrok or deploy for webhooks?</p>
+      <p class="qa-a">Use ngrok locally first — faster iteration. Run <code style="font-family:var(--font-mono); font-size:11px;">ngrok http 8000</code>, paste the HTTPS URL into Bolna's webhook field as https://xxxx.ngrok.io/webhook/bolna. Deploy only when it's working.</p>
+    </div>
+    <div class="qa">
+      <p class="qa-q">Doctor/branch in intake form?</p>
+      <p class="qa-a">Keep it simple — specialty + preferred date/time is enough. Let Asha ask for doctor and branch over the call. Fewer form fields = cleaner demo and shows the voice agent doing its job.</p>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="sendPrompt('Write the complete code for services/bolna.py and routers/webhooks.py for the Apollo HealthLine FastAPI backend — including the call trigger, phone normaliser, webhook receiver with BackgroundTasks, and call_id tracking.')">Write bolna.py + webhooks.py ↗</button>
+    <button class="btn" onclick="sendPrompt('Write the complete Appointment SQLModel model and database.py for the Apollo HealthLine FastAPI backend including call_id, call_status, and transcript fields.')">Write models + DB ↗</button>
+  </div>
+</div>

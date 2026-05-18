@@ -1,88 +1,139 @@
 # Apollo HealthLine — Voice AI Scheduling Agent
 
-A full-stack demo showcasing a Voice AI agent (built on Bolna) integrated with a React/Next.js web app and Python/FastAPI backend.
+> A full-stack demo showcasing a Voice AI agent (Asha) built on Bolna, integrated with a Next.js web app and FastAPI backend. Patients book appointments via web form, confirm over a phone call with an AI agent, and admins monitor everything from a live dashboard.
 
-## Architecture
+## Demo Flow
 
 ```
-Patient → Web Form → FastAPI Backend → Bolna API → Asha (Voice AI Agent)
+Patient fills form → Asha calls patient → Patient confirms via voice
                                                       ↓
-Admin Dashboard ← Webhook Updates ← Call Completes ← Bolna
+Admin Dashboard ← Webhook updates ← Call completes ← Bolna
 ```
+
+**Watch the demo:** [Screen recording link]
+
+---
+
+## Features
+
+- **Patient Intake Form** — Multi-step web form collecting patient info, specialty, branch, and preferred date/time
+- **Voice AI Agent (Asha)** — Bolna-powered agent that calls patients to confirm appointments
+- **Admin Dashboard** — Live polling table with status badges, analytics, and one-click reminder calls
+- **Transcript Viewer** — Full call transcript with conversation bubbles
+- **Real-time Webhooks** — Dashboard updates automatically when calls complete
+- **Send Reminder** — One-click reminder call to any patient
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS, shadcn/ui |
+| Backend | Python 3.11+, FastAPI, SQLModel, SQLite |
+| Voice AI | [Bolna](https://bolna.ai) — Asha agent |
+| Deployment | Vercel (frontend), Railway (backend) |
+
+---
 
 ## Quick Start
 
-### Backend (FastAPI)
+### 1. Backend Setup
 
 ```bash
 cd apps/api
-cp .env.example .env  # Add your BOLNA_API_KEY and BOLNA_AGENT_ID
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env — add your BOLNA_API_KEY and BOLNA_AGENT_ID
+
+# Start server
 uvicorn main:app --reload --port 8000
 ```
 
 API docs available at `http://localhost:8000/docs`
 
-### Frontend (Next.js)
+### 2. Frontend Setup
 
 ```bash
 cd apps/web
-cp ../../.env.example .env.local  # Set NEXT_PUBLIC_API_URL
+
 pnpm install
+
+# Configure environment
+cp ../../.env.example .env.local
+# Set NEXT_PUBLIC_API_URL=http://localhost:8000
+
 pnpm dev
 ```
 
 Visit `http://localhost:3000`
+
+### 3. Webhook (Local Dev)
+
+For local webhook testing, use [ngrok](https://ngrok.com):
+
+```bash
+ngrok http 8000
+# Copy the HTTPS URL (e.g., https://abc123.ngrok.io)
+# Paste in Bolna dashboard → Webhook URL: https://abc123.ngrok.io/webhook/bolna
+```
+
+---
 
 ## Project Structure
 
 ```
 bolna/
 ├── apps/
-│   ├── api/                    # FastAPI Backend
-│   │   ├── main.py             # App entry + CORS
-│   │   ├── database.py         # SQLite/SQLModel
-│   │   ├── models.py           # Pydantic + SQLModel schemas
+│   ├── api/                        # FastAPI Backend
+│   │   ├── main.py                 # App entry, CORS, lifespan
+│   │   ├── database.py             # SQLite/SQLModel setup
+│   │   ├── models.py               # Pydantic + SQLModel schemas
 │   │   ├── routers/
-│   │   │   ├── appointments.py # CRUD + Bolna trigger
-│   │   │   ├── webhooks.py     # Bolna webhook receiver
-│   │   │   └── analytics.py    # Dashboard stats
+│   │   │   ├── appointments.py     # CRUD + Bolna trigger
+│   │   │   ├── webhooks.py         # Async webhook receiver
+│   │   │   └── analytics.py        # Dashboard statistics
 │   │   └── services/
-│   │       └── bolna.py        # Bolna API client
-│   └── web/                    # Next.js Frontend
+│   │       └── bolna.py            # Bolna API client + phone normaliser
+│   │
+│   └── web/                        # Next.js Frontend
 │       ├── app/
 │       │   ├── patient/page.tsx     # Patient intake form
-│       │   ├── dashboard/page.tsx   # Admin dashboard
-│       │   ├── appointments/[id]/   # Transcript viewer
-│       │   └── api/                # Proxy routes to FastAPI
+│       │   ├── dashboard/page.tsx   # Admin dashboard + analytics
+│       │   ├── appointments/[id]/  # Transcript viewer
+│       │   └── api/               # Proxy routes → FastAPI
 │       └── components/
+│
 └── packages/
-    └── ui/                     # Shared shadcn/ui components
+    └── ui/                         # Shared shadcn/ui components
 ```
 
-## Key Features
+---
 
-- **Patient Intake Form**: Multi-step form collecting patient info, specialty, branch, date/time
-- **Voice Agent Integration**: Triggers outbound call via Bolna API on form submission
-- **Admin Dashboard**: Live polling table with status badges, analytics strip
-- **Transcript Viewer**: Full call transcript with conversation bubbles
-- **Webhook Receiver**: Real-time status updates when calls complete
-- **Send Reminder**: One-click reminder call to patients
+## API Endpoints
 
-## Tech Stack
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Health check |
+| `POST` | `/api/appointments` | Create appointment + trigger Bolna call |
+| `GET` | `/api/appointments` | List all appointments |
+| `GET` | `/api/appointments/{id}` | Get single appointment |
+| `POST` | `/api/appointments/{id}/reminder` | Send reminder call |
+| `POST` | `/webhook/bolna` | Receive Bolna call status webhook |
+| `GET` | `/api/analytics` | Dashboard statistics |
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 16, React 19, shadcn/ui, Tailwind CSS |
-| Backend | FastAPI, SQLModel, SQLite |
-| Voice AI | Bolna (Asha agent) |
-| Deployment | Vercel (frontend), Railway (backend) |
+---
 
 ## Environment Variables
 
 ### Backend (`apps/api/.env`)
+
 ```env
-BOLNA_API_KEY=your_api_key
+BOLNA_API_KEY=your_bolna_api_key
 BOLNA_AGENT_ID=your_agent_id
 BOLNA_API_URL=https://api.bolna.dev
 DATABASE_URL=sqlite:///./appointments.db
@@ -90,19 +141,23 @@ CORS_ORIGINS=http://localhost:3000
 ```
 
 ### Frontend (`apps/web/.env.local`)
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-## Bolna API Integration
+---
 
-### Trigger Outbound Call
+## Bolna Integration
+
+### Triggering a Call
+
 ```http
 POST https://api.bolna.dev/call
 Authorization: Bearer {BOLNA_API_KEY}
 {
   "agent_id": "your-agent-id",
-  "recipient_phone_number": "+91XXXXXXXXXX",
+  "recipient_phone_number": "+919876543210",
   "variables": {
     "name": "Rahul Mehta",
     "specialty": "Cardiology",
@@ -115,37 +170,55 @@ Authorization: Bearer {BOLNA_API_KEY}
 ```
 
 ### Webhook Payload (received at `/webhook/bolna`)
+
 ```json
 {
   "call_id": "abc123",
   "status": "completed",
-  "transcript": [...],
+  "outcome": "confirmed",
   "duration": 119,
-  "outcome": "confirmed"
+  "transcript": [
+    { "role": "agent", "content": "Hello, this is Asha from Apollo HealthLine..." },
+    { "role": "patient", "content": "Yes, I'd like to confirm my appointment." }
+  ]
 }
 ```
 
-## Demo Flow
+---
 
-1. Patient visits `/patient`, fills multi-step form
-2. On submit, backend creates appointment record + triggers Bolna call
-3. Asha (Bolna voice agent) calls patient's phone
-4. Patient confirms appointment details via voice
-5. Bolna sends webhook to backend with call outcome
-6. Dashboard updates in real-time showing confirmed status
-7. Admin can view full transcript at `/appointments/[id]`
+## Build & Deploy
 
-## Deployment
+### Frontend (Vercel)
 
-1. **Backend**: Deploy `apps/api/` to Railway/Render
-   - Set `BOLNA_API_KEY`, `BOLNA_AGENT_ID` env vars
-   - Set `CORS_ORIGINS` to your Vercel domain
+```bash
+cd apps/web
+vercel
+# Set NEXT_PUBLIC_API_URL to your backend URL
+```
 
-2. **Frontend**: Deploy `apps/web/` to Vercel
-   - Set `NEXT_PUBLIC_API_URL` to your backend URL
+### Backend (Railway)
 
-3. **Webhook**: Use ngrok for local dev, or update Bolna dashboard with production webhook URL
+```bash
+cd apps/api
+railway init
+railway up
+# Add environment variables in Railway dashboard
+```
+
+---
 
 ## Screenshots
 
-See `/docs` folder for demo screenshots.
+| Patient Intake Form | Admin Dashboard |
+|---------------------|-----------------|
+| ![Patient Form]() | ![Dashboard]() |
+
+| Transcript Viewer | Analytics |
+|-------------------|-----------|
+| ![Transcript]() | ![Analytics]() |
+
+---
+
+## License
+
+MIT
