@@ -6,15 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./appointments.db")
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from sqlmodel import SQLModel, create_engine
-    engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
-    SQLModel.metadata.create_all(engine)
+    print("Starting up...")
     yield
+    print("Shutting down...")
 
 
 app = FastAPI(
@@ -34,6 +31,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "apollo-healthline-api"}
+
+
 from routers.appointments import router as appointments_router
 from routers.webhooks import router as webhooks_router
 from routers.analytics import router as analytics_router
@@ -41,8 +44,3 @@ from routers.analytics import router as analytics_router
 app.include_router(appointments_router)
 app.include_router(webhooks_router)
 app.include_router(analytics_router)
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "service": "apollo-healthline-api"}
