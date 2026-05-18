@@ -1,0 +1,202 @@
+
+<style>
+  * { box-sizing: border-box; }
+  .wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--color-text-secondary); text-transform: uppercase; margin: 0 0 6px; }
+  .section-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+  .section-sub { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 1.5rem; }
+  .arch-row { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; overflow-x: auto; }
+  .arch-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; min-width: 110px; text-align: center; flex-shrink: 0; }
+  .arch-box.highlight { background: #E6F1FB; border-color: #B5D4F4; }
+  .arch-box .icon { font-size: 20px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .arch-box.highlight .icon { color: #0C447C; }
+  .arch-box .label { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 2px; }
+  .arch-box .sublabel { font-size: 11px; color: var(--color-text-secondary); margin: 0; }
+  .arrow { font-size: 18px; color: var(--color-text-secondary); padding: 0 6px; flex-shrink: 0; }
+  .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .phase { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.1rem; }
+  .phase-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .phase-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .phase-num.blue { background: #E6F1FB; color: #0C447C; }
+  .phase-num.teal { background: #E1F5EE; color: #085041; }
+  .phase-num.purple { background: #EEEDFE; color: #3C3489; }
+  .phase-num.amber { background: #FAEEDA; color: #633806; }
+  .phase-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+  .phase-time { font-size: 11px; color: var(--color-text-secondary); margin: 0 0 0 auto; }
+  .task-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
+  .task-list li { font-size: 12px; color: var(--color-text-secondary); display: flex; gap: 6px; line-height: 1.5; }
+  .task-list li::before { content: "–"; flex-shrink: 0; }
+  .stack-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .stack-pill { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); background: var(--color-background-primary); display: flex; align-items: center; gap: 5px; }
+  .stack-pill.blue { background: #E6F1FB; color: #0C447C; border-color: #B5D4F4; }
+  .stack-pill.teal { background: #E1F5EE; color: #085041; border-color: #9DD4C0; }
+  .stack-pill.purple { background: #EEEDFE; color: #3C3489; border-color: #C4C0F5; }
+  .block-label { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-secondary); margin: 0 0 10px; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.25rem 0; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.25rem; }
+  .btn { font-size: 13px; padding: 7px 16px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: var(--color-background-secondary); }
+  .webhook-box { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; font-size: 12.5px; font-family: var(--font-mono); color: var(--color-text-primary); line-height: 1.8; margin-bottom: 1.25rem; }
+  .webhook-box .comment { color: var(--color-text-secondary); }
+  .webhook-box .key { color: #185FA5; }
+  .webhook-box .val { color: #0F6E56; }
+</style>
+
+<div class="wrap">
+  <p class="section-label">Full stack assignment</p>
+  <p class="section-title">Apollo HealthLine — Web App + Voice Agent</p>
+  <p class="section-sub">Your Bolna agent is already built. You just need the web layer around it.</p>
+
+  <p class="block-label">System architecture</p>
+  <div class="arch-row">
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-user" aria-hidden="true"></i></div>
+      <p class="label">Patient</p>
+      <p class="sublabel">Fills web form</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+      <p class="label">Web App</p>
+      <p class="sublabel">React + Node</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-api" aria-hidden="true"></i></div>
+      <p class="label">Bolna API</p>
+      <p class="sublabel">Triggers call</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-microphone" aria-hidden="true"></i></div>
+      <p class="label">Asha Agent</p>
+      <p class="sublabel">Calls patient</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-webhook" aria-hidden="true"></i></div>
+      <p class="label">Webhook</p>
+      <p class="sublabel">Call outcome</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon"><i class="ti ti-table" aria-hidden="true"></i></div>
+      <p class="label">Dashboard</p>
+      <p class="sublabel">Live status</p>
+    </div>
+  </div>
+
+  <p class="block-label">What the web app does</p>
+  <div class="phase-grid">
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-num blue">1</div>
+        <p class="phase-title">Patient intake form</p>
+        <p class="phase-time">Page 1</p>
+      </div>
+      <ul class="task-list">
+        <li>Patient enters name, phone, specialty, preferred date/time</li>
+        <li>Submits form → backend calls Bolna API to trigger outbound call</li>
+        <li>Patient's phone rings — Asha confirms the booking over call</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num teal">2</div>
+      <p class="phase-title">Admin dashboard</p>
+      <p class="phase-time">Page 2</p>
+      </div>
+      <ul class="task-list">
+        <li>Live table of all appointments: name, status, call outcome</li>
+        <li>Status updates via Bolna webhook (booked / no-answer / escalated)</li>
+        <li>One-click "Send reminder" triggers Asha reminder call</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num purple">3</div>
+      <p class="phase-title">Call transcript viewer</p>
+      <p class="phase-time">Page 3</p>
+      </div>
+      <ul class="task-list">
+        <li>Click any appointment → see full call transcript</li>
+        <li>Shows what Asha said, what patient said, outcome</li>
+        <li>Demonstrates webhook + transcript API integration</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num amber">4</div>
+      <p class="phase-title">Analytics strip</p>
+      <p class="phase-time">Page 2 footer</p>
+      </div>
+      <ul class="task-list">
+        <li>Total calls made, confirmed, escalated, no-answer</li>
+        <li>No-show reduction % (simulated)</li>
+        <li>Cost saved vs human agent (calculated live)</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="block-label">Recommended stack</p>
+  <div class="stack-row">
+    <span class="stack-pill blue"><i class="ti ti-brand-react" aria-hidden="true"></i> React + Vite (frontend)</span>
+    <span class="stack-pill blue"><i class="ti ti-brand-nodejs" aria-hidden="true"></i> Node + Express (backend)</span>
+    <span class="stack-pill teal"><i class="ti ti-database" aria-hidden="true"></i> SQLite or in-memory store</span>
+    <span class="stack-pill teal"><i class="ti ti-webhook" aria-hidden="true"></i> Bolna webhook endpoint</span>
+    <span class="stack-pill purple"><i class="ti ti-brand-vercel" aria-hidden="true"></i> Deploy: Vercel + Railway</span>
+    <span class="stack-pill purple"><i class="ti ti-brand-github" aria-hidden="true"></i> GitHub repo</span>
+  </div>
+
+  <p class="block-label">Key Bolna API calls you'll make</p>
+  <div class="webhook-box">
+<span class="comment">// 1. Trigger outbound call when patient submits form</span>
+<span class="key">POST</span> <span class="val">https://api.bolna.dev/call</span>
+{
+  agent_id: <span class="val">"your-agent-id"</span>,
+  recipient_phone_number: <span class="val">"+91XXXXXXXXXX"</span>,
+  variables: {
+    name: <span class="val">"Rahul Mehta"</span>,
+    specialty: <span class="val">"Cardiology"</span>,
+    date: <span class="val">"Friday"</span>,
+    time: <span class="val">"2:30 PM"</span>,
+    branch: <span class="val">"Jubilee Hills"</span>,
+    doctor: <span class="val">"Dr. Priya Sharma"</span>
+  }
+}
+
+<span class="comment">// 2. Webhook — Bolna POSTs this to your backend after call ends</span>
+<span class="key">POST</span> <span class="val">https://your-app.com/webhook/bolna</span>
+{
+  call_id: <span class="val">"abc123"</span>,
+  status: <span class="val">"completed"</span>,
+  transcript: [...],
+  duration: <span class="val">119</span>,
+  outcome: <span class="val">"booked"</span>
+}
+
+<span class="comment">// 3. Fetch transcript for a specific call</span>
+<span class="key">GET</span> <span class="val">https://api.bolna.dev/call/{call_id}</span>
+  </div>
+
+  <p class="block-label">Time breakdown (7 hrs total)</p>
+  <div class="phase-grid">
+    <div class="phase">
+      <div class="phase-head"><div class="phase-num blue">1</div><p class="phase-title">Use case write-up</p><p class="phase-time">30 min</p></div>
+      <ul class="task-list"><li>Already done — reuse Section 1 pitch from Bolna assignment</li></ul>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><div class="phase-num teal">2</div><p class="phase-title">Bolna agent</p><p class="phase-time">Done ✓</p></div>
+      <ul class="task-list"><li>Already built and tested — add webhook URL once backend is ready</li></ul>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><div class="phase-num purple">3</div><p class="phase-title">Web app build</p><p class="phase-time">4 hrs</p></div>
+      <ul class="task-list"><li>Intake form + Bolna API call (1.5 hr)</li><li>Webhook receiver + DB (1 hr)</li><li>Dashboard + transcript view (1.5 hr)</li></ul>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><div class="phase-num amber">4</div><p class="phase-title">Demo recording</p><p class="phase-time">1 hr</p></div>
+      <ul class="task-list"><li>Screen record full flow: form → call → dashboard updates → transcript</li></ul>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="sendPrompt('Build the full web app for the Apollo HealthLine assignment — React frontend with patient intake form, Node/Express backend that calls Bolna API to trigger outbound calls, webhook receiver, and admin dashboard showing call status and transcripts. Give me the complete code.')">Build the full app ↗</button>
+  </div>
+</div>
